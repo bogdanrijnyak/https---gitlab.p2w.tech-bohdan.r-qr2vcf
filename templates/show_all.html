@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All VCF Records</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1C1C24;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 70px auto;
+            padding: 20px;
+            background-color: #2C2C34;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 95%;
+            overflow-x: auto;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+ table, th, td {
+        border: 1px solid #444;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        white-space: normal;
+        word-wrap: break-word;
+        vertical-align: middle; /* Вертикальное выравнивание по центру для всех ячеек */
+    }
+
+    th {
+        background-color: #383844;
+        vertical-align: middle; /* Вертикальное выравнивание по центру для заголовков */
+    }
+
+    .qr-code {
+        width: 69px;
+        height: 69px;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto; /* Центрирование изображения QR-кода по горизонтали */
+    }
+    a {
+            color: #9ACD32; /* Светло-зеленый цвет ссылок */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        
+    .btn {
+        display: block;
+        width: 80px;
+        padding: 5px 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        margin: 3px auto; /* Центрирование кнопки по горизонтали и добавление отступов снизу */
+    }
+
+    .btn.delete {
+        background-color: #f44336;
+    }
+
+    .btn:hover {
+        opacity: 0.8;
+    }
+ /* Додано для стилізації кнопки Log Out та імені користувача */
+ .logout-container {
+        position: absolute;
+        top: 5px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logout-container span {
+        font-size: 16px;
+        color: #FFFFFF;
+    }
+
+    .logout-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #4A4A4A;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+    }
+
+    .logout-container a:hover {
+        background-color: #6A6A6A;
+    }
+        /* Додано для стилізації кнопки Go Back */
+        .back-container {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            position: absolute;
+            top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #ff7700;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-container a:hover {
+            background-color: #fba14e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="back-container">
+        <a href="{{ url_for('cancel') }}" class="go-main-button">Go back</a>
+    </div>
+    
+<div class="logout-container">
+    <span>{{ username }}</span> <!-- Відображення імені користувача -->
+    <a href="{{ url_for('logout') }}">Log Out</a>
+</div>
+
+    <div class="container">
+        <h1>All VCF Records</h1>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Email (Work)</th>
+                <th>Mobile phone</th>
+                <th>Phone (Work)</th>
+                <th>Organization</th>
+                <th>Role</th>
+                <th>QR-link</th>
+                <th>QR Code</th>
+                <th>Revision</th>
+                <th>VCF ID</th>
+                <th>Actions</th>
+            </tr>
+            {% for row in all_data %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td><a href="mailto:{{ row[4] }}">{{ row[4] }}</a></td>
+                <td><a href="mailto:{{ row[5] }}">{{ row[5] }}</a></td>
+                <td>{{ row[6] }}</td>
+                <td>{{ row[7] }}</td>
+                <td>{{ row[10] }}</td>
+                <td>{{ row[11] }}</td>
+                <td><a href="{{ row[18] }}" target="_blank">{{ row[18] }}</a></td>
+                <td><img src="{{ url_for('static', filename='output/' + row[20] + '.png') }}" alt="QR Code" class="qr-code"></td>
+                <td>{{ row[19] }}</td>
+                <td>{{ row[20] }}</td>
+                <td>
+                    {% if row[4] %}
+                        <a href="{{ url_for('edit') }}?email={{ row[4] }}">
+                            <button class="btn">Edit</button>
+                        </a>
+                    {% elif row[5] %}
+                        <a href="{{ url_for('edit') }}?email={{ row[5] }}">
+                            <button class="btn">Edit</button>
+                        </a>
+                    {% else %}
+                        <button class="btn" disabled>No Email</button>
+                    {% endif %}
+                    <form action="{{ url_for('delete_record', id=row[0]) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn delete" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

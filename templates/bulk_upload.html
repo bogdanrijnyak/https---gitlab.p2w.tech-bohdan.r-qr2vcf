@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <title>Bulk Upload</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1C1C24;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 70px auto;
+            padding: 20px;
+            background-color: #2C2C34;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 95%;
+            padding-bottom: 40px; 
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #2E2E38;
+            color: #FFFFFF;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ff7700;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+
+        }
+        button:hover {
+            background-color: #fba14e;
+        }
+        .example-container {
+            margin-top: 30px;
+            font-size: 16px;
+            text-align: center;
+            max-width: 100%;
+            overflow-x: auto;
+            background-color: #383844;
+            padding: 10px;
+            border-radius: 5px;
+            padding-bottom: 20px; 
+        }
+        .example-container code {
+            color: #9ACD32;
+            white-space: nowrap;
+            padding-bottom: 5px; 
+            
+        }
+        .example-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #ff7700;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+
+            
+        }
+        .example-container a:hover {
+            background-color: #fba14e;
+
+        }
+        /* Додано для стилізації кнопки Log Out та імені користувача */
+ .logout-container {
+        position: absolute;
+        top: 5px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logout-container span {
+        font-size: 16px;
+        color: #FFFFFF;
+    }
+
+    .logout-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #4A4A4A;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+    }
+
+    .logout-container a:hover {
+        background-color: #6A6A6A;
+    }
+        /* Додано для стилізації кнопки Go Back */
+        .back-container {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            position: absolute;
+            top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #ff7700;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-container a:hover {
+            background-color: #fba14e;
+
+        }
+    </style>
+</head>
+<body>
+
+    <div class="back-container">
+        <a href="{{ url_for('cancel') }}" class="go-main-button">Go back</a>
+    </div>
+    
+    <div class="logout-container">
+        <span>{{ username }}</span> <!-- Відображення імені користувача -->
+        <a href="{{ url_for('logout') }}">Log Out</a>
+    </div>
+
+    <div class="container">
+        <h1>Bulk Upload</h1>
+        <form action="{{ url_for('bulk_upload') }}" method="POST" enctype="multipart/form-data">
+            <label for="file">Select a CSV or Excel file:</label>
+            <input type="file" name="file" id="file" required>
+            <button type="submit">Upload</button>
+        </form>
+
+        <div class="example-container">
+            <h2>Example CSV</h2>
+            <code>
+fn,bday,email_home,email_work,tel_home,tel_work,address_home,address_work,org,role,photo_url,telegram,skype,linkedin,instagram,twitter<br>
+John Doe,1990-01-01,john_home@example.com,john_work@example.com,555-555-5555,555-666-7777,123 Main St,456 Work Ave,Company,Manager,http://example.com/photo.jpg,@johndoe,live:johndoe,linkedin.com/in/johndoe,instagram.com/johndoe,twitter.com/johndoe
+            </code>
+            <a href="{{ url_for('static', filename= 'example.csv') }}" download>Download CSV Example</a>
+        </div>
+<div>
+    </div>
+</body>
+</html>

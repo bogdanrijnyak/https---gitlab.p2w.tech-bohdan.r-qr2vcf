@@ -1,0 +1,2 @@
+fn,bday,email_home,email_work,tel_home,tel_work,address_home,address_work,org,role,photo_url,telegram,skype,linkedin,instagram,twitter
+John Doe,1990-01-01,john_home@example.com,john_work@example.com,555-555-5555,555-666-7777,123 Main St,456 Work Ave,Company,Manager,http://example.com/photo.jpg,@johndoe,live:johndoe,linkedin.com/in/johndoe,instagram.com/johndoe,twitter.com/johndoe

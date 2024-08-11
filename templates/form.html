@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate VCF</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <style>
+        body {
+            background-color: #1C1C24;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 10px;
+            margin: 0;
+            padding-bottom: 40px; /* Отступ снизу */
+            min-height: 100vh; /* Минимальная высота экрана */
+        }
+
+        .container {
+            background-color: #2C2C34;
+            border-radius: 15px;
+            padding: 20px;
+            width: 600px;
+            text-align: center;
+            margin-top: 80px; /* Отступ сверху для контейнера с полями */
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            color: #A6A6A6;
+            font-weight: bold;
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+
+        .form-control, .form-control-file, .btn-primary, .btn-cancel {
+            width: 100%;
+            border-radius: 5px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .form-control, .form-control-file {
+            border: 1px solid #bbbbbb;
+            background-color: #3c3c3c;
+            color: #FFFFFF;
+        }
+
+        .form-control:focus, .form-control-file:focus {
+            background-color: #2C2C34;
+            border-color: #bcbcbc;
+            box-shadow: 0 0 5px rgba(0, 166, 237, 0.5);
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background-color: #ff7700;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #fba14e;
+            transform: scale(1.02);
+        }
+
+        .btn-cancel {
+            background-color: #5a6268;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background-color: #6c757d;
+            transform: scale(1.02);
+        }
+
+        img.photo {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        /* Додано для стилізації кнопки Log Out та імені користувача */
+        .logout-container {
+            position: fixed;
+            top: 5px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .logout-container span {
+            font-size: 16px;
+            color: #FFFFFF;
+        }
+
+        .logout-container a {
+        color: #FFFFFF;
+            text-decoration: none;
+            background-color: #4A4A4A;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+    }
+
+    .logout-container a:hover {
+        background-color: #6A6A6A;
+    }
+
+     /* Додано для стилізації кнопки Go Back */
+     .back-container {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+        }
+
+        .back-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #ff7700;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-container a:hover {
+            background-color: #fba14e;
+        }
+    </style>
+</head>
+<body>
+   
+<div class="logout-container" id="logoutContainer">
+    <span>{{ username }}</span> <!-- Відображення імені користувача -->
+    <a href="{{ url_for('logout') }}">Log Out</a>
+</div>
+
+<div class="container">
+    <h2>VCARD GENERATOR</h2>
+    <form action="/generate" method="post" enctype="multipart/form-data">
+        <!-- Основная информация -->
+        <div class="form-group">
+            <label for="fn">Full Name:</label>
+            <input type="text" id="fn" name="fn" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="bday">Birthday:</label>
+            <input type="date" id="bday" name="bday" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="email_home">Email (Home):</label>
+            <input type="email" id="email_home" name="email_home" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="email_work">Email (Work):</label>
+            <input type="email" id="email_work" name="email_work" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="tel_home">Mobile phone:</label>
+            <input type="tel" id="tel_home" name="tel_home" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="tel_work">Phone (Work):</label>
+            <input type="tel" id="tel_work" name="tel_work" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="address_home">Address (Home):</label>
+            <input type="text" id="address_home" name="address_home" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="address_work">Address (Work):</label>
+            <input type="text" id="address_work" name="address_work" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="org">Organization:</label>
+            <input type="text" id="org" name="org" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="role">Role:</label>
+            <input type="text" id="role" name="role" class="form-control" required>
+        </div>
+
+        <!-- Загрузка файлов -->
+        <div class="form-group">
+            <label for="photo">Photo:</label>
+            <input type="file" id="photo" name="photo" class="form-control-file" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label for="photo_url">Upload photo by URL:</label>
+            <input type="url" id="photo_url" name="photo_url" class="form-control">
+        </div>
+
+        <!-- Социальные сети -->
+        <div class="form-group">
+            <label for="telegram">Telegram:</label>
+            <input type="url" id="telegram" name="telegram" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="skype">Skype:</label>
+            <input type="url" id="skype" name="skype" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="linkedin">LinkedIn:</label>
+            <input type="url" id="linkedin" name="linkedin" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="instagram">Instagram:</label>
+            <input type="url" id="instagram" name="instagram" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="twitter">Twitter:</label>
+            <input type="url" id="twitter" name="twitter" class="form-control">
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn-primary">Generate VCF</button>
+            <button type="button" class="btn-cancel" onclick="window.history.back()">Cancel</button>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    let lastScrollTop = 0;
+    const logoutContainer = document.getElementById('logoutContainer');
+
+    window.addEventListener('scroll', function() {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop > lastScrollTop) {
+            // Прокручиваем вниз - прячем контейнер
+            logoutContainer.style.transform = 'translateY(-200%)'; // Прячем контейнер за верх экрана
+        } 
+
+        if (scrollTop === 0) {
+            // Если прокрутка в самом верху, оставляем контейнер видимым
+            logoutContainer.style.transform = 'translateY(0)';
+
+        }
+
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Для мобильных устройств или прокрутки вверх
+    });
+</script>
+</body>
+</html>

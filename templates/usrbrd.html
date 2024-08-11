@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find VCF by Email</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <style>
+        body {
+            background-color: #1C1C24;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .logout-container {
+            position: fixed;
+            top: 5px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease-in-out; /* Добавлен переход для плавного скрытия/показа */
+        }
+
+        .logout-container span {
+            font-size: 16px;
+            color: #FFFFFF;
+        }
+
+        .logout-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #4A4A4A;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-container a:hover {
+            background-color: #6A6A6A;
+        }
+
+        .content-container {
+            margin-top: 80px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .block {
+            margin-top: 10px;
+            padding: 20px;
+            background-color: #2C2C34;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .block h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .block h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        input[type="email"] {
+            width: 94%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #ff8112;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #ff7a28;
+            transform: scale(1.02);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            width: 48%;
+            background-color: #f58a1f;
+        }
+
+        .show-all-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .show-all-container button {
+            background: #00A6ED;
+        }
+    </style>
+</head>
+<body>
+    <div class="logout-container" id="logoutContainer">
+        <span>{{ username }}</span>
+        <a href="{{ url_for('logout') }}">Log Out</a>
+    </div>
+
+    <div class="content-container">
+        <div class="block">
+            <h2>DASHBOARD IN PROCESS OF DEVELOPMENT</h2>
+        </div>
+
+        <div class="block">
+            <h1>TODAY YOU ONLY CAN CHECK YOUR VCF AUDIT INFO HERE:</h1>
+            <form action="{{ url_for('audit') }}" method="get">
+                <input type="hidden" name="vcfid" value="{{ username }}">
+                <button type="submit">Audit and monitoring</button>        
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let lastScrollTop = 0;
+        const logoutContainer = document.getElementById('logoutContainer');
+
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop) {
+                // Прокручиваем вниз - прячем контейнер
+                logoutContainer.style.transform = 'translateY(-110%)'; // Прячем контейнер
+            } else {
+                // Прокручиваем вверх - показываем контейнер
+                logoutContainer.style.transform = 'translateY(0)';
+            }
+
+            if (scrollTop === 0) {
+                // Если прокрутка в самом верху, оставляем контейнер видимым
+                logoutContainer.style.transform = 'translateY(0)';
+            }
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Для мобильных устройств или прокрутки вверх
+        });
+    </script>
+</body>
+</html>

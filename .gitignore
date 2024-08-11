@@ -1,0 +1,74 @@
+# Общие исключения
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Виртуальное окружение
+venv/
+ENV/
+env/
+.venv/
+
+# Конфигурационные файлы для IDE
+.vscode/
+.idea/
+
+# Логи
+logs/
+*.log
+
+# Базы данных
+*.sqlite3
+*.db
+
+# Конфиденциальные файлы
+.env
+*.secret
+
+# Статические файлы и загрузки (если они не версионируются)
+media/
+
+
+# Файлы и директории для деплоя
+*.pem
+*.key
+*.crt
+
+# Документация/Артефакты
+docs/
+*.pdf
+*.docx
+*.pptx
+
+# Node.js (если используется для фронтенда)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python упаковка
+build/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Кэш pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Тестовые файлы и отчеты
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+.cache/
+

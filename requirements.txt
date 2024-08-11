@@ -1,0 +1,12 @@
+flask
+base64
+requests
+datetime
+os
+qrcode
+sqlite3
+uuid
+werkzeug.utils
+werkzeug.security
+functools
+pandas

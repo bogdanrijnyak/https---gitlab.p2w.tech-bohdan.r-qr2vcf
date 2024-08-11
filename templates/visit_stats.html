@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <title>Visit Statistics</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1C1C24;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 70px auto;
+            padding: 20px;
+            background-color: #2C2C34;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 95%;
+            overflow-x: auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        table, th, td {
+            border: 1px solid #444;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        th {
+            background-color: #383844;
+        }
+        tr:nth-child(even) {
+            background-color: #2E2E38;
+        }
+        tr:nth-child(odd) {
+            background-color: #34343D;
+        }
+        tr:hover {
+            background-color: #454555;
+        }
+
+       /* Додано для стилізації кнопки Log Out та імені користувача */
+ .logout-container {
+        position: absolute;
+        top: 5px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logout-container span {
+        font-size: 16px;
+        color: #FFFFFF;
+    }
+
+    .logout-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #4A4A4A;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+    }
+
+    .logout-container a:hover {
+        background-color: #6A6A6A;
+    }
+        /* Додано для стилізації кнопки Go Back */
+        .back-container {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            position: absolute;
+            top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #ff7700;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-container a:hover {
+            background-color: #fba14e;
+
+        }
+    </style>
+</head>
+<body>
+
+    <div class="back-container">
+        <a href="javascript:history.back()">Go Back</a> <!-- Кнопка повернення назад -->
+    </div>
+    
+    <div class="logout-container">
+        <span>{{ username }}</span> <!-- Відображення імені користувача -->
+        <a href="{{ url_for('logout') }}">Log Out</a>
+    </div>
+    <div class="container">
+        <h1>VISIT STATISTICS</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Email (alternate)</th>
+                    <th>VCF ID</th>
+                    <th>Visit Count</th>
+                    <th>Last Visit</th>
+                    <th>IP Address</th>
+                    <th>User Agent</th>
+                    <th>Referrer</th>
+                </tr>
+            </thead>
+        <tbody>
+            {% for visit in visits %}
+            <tr>
+                <td>{{ visit[0] }}</td>
+                <td>{{ visit[1] }}</td>
+                <td>{{ visit[2] }}</td>
+                <td>{{ visit[3] }}</td>
+                <td>{{ visit[4] }}</td>
+                <td>{{ visit[5] }}</td>
+                <td>{{ visit[6] }}</td>
+                <td>{{ visit[7] }}</td>
+                <td>{{ visit[8] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

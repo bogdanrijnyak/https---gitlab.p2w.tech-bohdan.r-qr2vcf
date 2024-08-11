@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <title>Profile Page</title>
+    <style>
+        body {
+            background-color: #1C1C24;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .profile-card {
+            background-color: #2C2C34;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+        }
+        .profile-card img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+        .profile-card h1 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        .profile-card p {
+            font-size: 18px;
+            margin: 5px 0;
+            color: #A6A6A6;
+        }
+        .profile-card .contact-info {
+            margin: 20px 0;
+        }
+        .profile-card .contact-info div {
+            margin: 10px 0;
+        }
+        .profile-card .contact-info a {
+            color: #00A6ED;
+            text-decoration: none;
+        }
+        .profile-card .button-container {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        
+
+
+        .profile-card .button.download {
+            background-color: #fd6f17;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;        
+
+        }
+        .profile-card .button.download:hover {
+            background-color: #ff873c;
+            transform: scale(1.02);
+        }
+
+        .profile-card .button.edit {
+            background-color: #6c757d;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 10px 40px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;        
+        }
+        
+        .profile-card .button.edit:hover {
+            background-color: #5a6268;
+            transform: scale(1.02);
+        }
+
+    </style>
+    <script>
+        window.onload = function() {
+            const vcfContent = `{{ vcf_strip | safe }}`;
+            const blob = new Blob([vcfContent], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '{{ fn | safe }}.vcf';  // Filename set to {fn}.vcf
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        
+            // Логирование посещений
+            fetch('/log_visit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    vcfid: '{{ vcfid }}',
+                    user_agent: navigator.userAgent,
+                    referrer: document.referrer
+                })
+            }).then(response => {
+                if (!response.ok) {
+                    console.error('Failed to log visit');
+                }
+            }).catch(error => {
+                console.error('Error logging visit:', error);
+            });
+
+            document.getElementById('download-button').addEventListener('click', function() {
+                const vcfContent = `{{ vcf_strip | safe }}`;
+                const blob = new Blob([vcfContent], { type: 'text/vcard' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '{{ fn | safe }}.vcf';  // Filename set to {fn}.vcf
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            })
+            };
+        
+    </script>
+</head>
+<body>
+    <div class="profile-card">
+        {% if photo_base64 %}
+            <img src="data:image/jpeg;base64,{{ photo_base64 }}" alt="Profile Picture">
+        {% endif %}
+        <h1>{{ fn }}</h1>
+        {% if org %}
+            <p>{{ org }}</p>
+            {% endif %}
+        {% if title %}
+            <p>{{ title }}</p>
+        {% endif %}
+        <div class="contact-info">
+            {% if tel_home %}
+                <div>Mobile phone: <a href="tel:{{ tel_home }}">{{ tel_home }}</a></div>
+            {% endif %}
+            {% if tel_work %}
+                <div>Phone (Work): <a href="tel:{{ tel_work }}">{{ tel_work }}</a></div>
+            {% endif %}
+            {% if email_home %}
+                <div>Email Home: <a href="mailto:{{ email_home }}">{{ email_home }}</a></div>
+            {% endif %}
+            {% if email_work %}
+                <div>Email Work: <a href="mailto:{{ email_work }}">{{ email_work }}</a></div>
+            {% endif %}
+            {% if address_home %}
+                <div>Address Home: {{ address_home }}</div>
+            {% endif %}
+            {% if address_work %}
+                <div>Address Work: {{ address_work }}</div>
+            {% endif %}
+            
+            {% if telegram %}
+            {% if "https://" in telegram %}
+                <div>Telegram: <a href="{{ telegram }}" target="_blank">{{ telegram }}</a></div>
+            {% else %}
+                <div>Telegram: <a href="https://t.me/{{ telegram|replace('@', '') }}" target="_blank">{{ telegram }}</a></div>
+            {% endif %}
+        {% endif %}
+        
+        {% if skype %}
+            {% if "https://" in skype %}
+                <div>Skype: <a href="{{ skype }}" target="_blank">{{ skype }}</a></div>
+            {% else %}
+                <div>Skype: <a href="skype:{{ skype }}" target="_blank">{{ skype }}</a></div>
+            {% endif %}
+        {% endif %}
+        
+        {% if linkedin %}
+            {% if "https://" in linkedin %}
+                <div>LinkedIn: <a href="{{ linkedin }}" target="_blank">{{ linkedin }}</a></div>
+            {% else %}
+                <div>LinkedIn: <a href="https://www.linkedin.com/in/{{ linkedin|replace('linkedin.com/in/', '') }}" target="_blank">{{ linkedin }}</a></div>
+            {% endif %}
+        {% endif %}
+        
+        {% if instagram %}
+            {% if "https://" in instagram %}
+                <div>Instagram: <a href="{{ instagram }}" target="_blank">{{ instagram }}</a></div>
+            {% else %}
+                <div>Instagram: <a href="https://www.instagram.com/{{ instagram|replace('instagram.com/', '') }}" target="_blank">{{ instagram }}</a></div>
+            {% endif %}
+        {% endif %}
+        
+        {% if twitter %}
+            {% if "https://" in twitter %}
+                <div>Twitter: <a href="{{ twitter }}" target="_blank">{{ twitter }}</a></div>
+            {% else %}
+                <div>Twitter: <a href="https://www.twitter.com/{{ twitter|replace('twitter.com/', '') }}" target="_blank">{{ twitter }}</a></div>
+            {% endif %}
+        {% endif %}
+        
+        </div>
+       
+        <div class="button-container">
+            <button id="download-button" class="button download">Download vCard</button>
+            {% if email_home %}
+            <a href="{{ url_for('edit') }}?email={{ email_home }}">
+                <button class="button edit">Edit</button>
+            </a>
+            {% elif email_work %}
+            <a href="{{ url_for('edit') }}?email={{ email_work }}">
+                <button class="button edit">Edit</button>
+            </a>
+            {% endif %}
+
+        </div>        
+    </div>
+</body>
+</html>

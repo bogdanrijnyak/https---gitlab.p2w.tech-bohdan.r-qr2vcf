@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find VCF by Email</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <style>
+        body {
+        background-color: #1C1C24;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center; /* Добавлено центрирование по вертикали */
+        min-height: 100vh; /* Минимальная высота экрана */
+        overflow-y: auto;
+        padding-bottom: 30px; /* Отступ снизу */
+    }
+
+    .content-container {
+        margin-top: 80px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center; /* Центрирование внутри контейнера */
+    }
+
+    .block {
+        margin-top: 1px;
+        padding: 25px;
+        background-color: #2C2C34;
+        border-radius: 25px;
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+        .logout-container {
+            position: fixed;
+            top: 5px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease-in-out; /* Добавлен переход для плавного скрытия/показа */
+        }
+
+        .logout-container span {
+            font-size: 16px;
+            color: #FFFFFF;
+        }
+
+        .logout-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #4A4A4A;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-container a:hover {
+            background-color: #6A6A6A;
+        }
+
+        .content-container {
+            margin-top: 80px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .block {
+            margin-top: 1px;
+            padding: 25px;
+            background-color: #2C2C34;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            margin-bottom: 10px;
+
+        }
+
+        .block h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        input[type="email"] {
+            width: 94%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #ff7700;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+
+        }
+
+        button:hover {
+            background-color: #fba14e;
+            transform: scale(1.02);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            width: 48%;
+            background-color: #ff7700;
+            transition: background-color 0.3s ease;
+        }
+        .button-container button:hover {
+            background-color: #fba14e;
+            transform: scale(1.02);
+        }
+        .show-all-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .show-all-container button {
+            background: #00A6ED;
+        }
+    </style>
+</head>
+<body>
+    <div class="logout-container" id="logoutContainer">
+        <span>{{ username }}</span>
+        <a href="{{ url_for('logout') }}">Log Out</a>
+    </div>
+
+    <div class="content-container">
+        <div class="block">
+            <h1>CREATE NEW VCARD</h1>
+            <div class="button-container">
+                <button type="button" onclick="window.location.href='/add'">Add new</button>
+                <button type="button" onclick="window.location.href='/bulk_upload'">Export from CSV</button>
+            </div>
+        </div>
+
+        <div class="block">
+            <h1>EDIT EXIST VCARD</h1>
+            <form action="/find" method="get">
+                <input type="email" name="email" placeholder="Enter email" required>
+                <button type="submit">Find</button>
+            </form>
+        </div>
+
+        <div class="block">
+            <h1>AUDIT INFO</h1>
+            <form action="{{ url_for('audit') }}" method="get">
+                <input type="email" name="auditEmail" placeholder="Enter email for audit and monitoring" required>
+                <button type="submit">Search by e-mail</button>        
+                <button type="button" onclick="window.location.href='/visit-stats'">Show all analytics</button>
+                <button type="button" onclick="window.location.href='/show-all'">Show full VCFs info </button>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let lastScrollTop = 0;
+        const logoutContainer = document.getElementById('logoutContainer');
+
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop) {
+                // Прокручиваем вниз - прячем контейнер
+                logoutContainer.style.transform = 'translateY(-200%)'; // Прячем контейнер
+            } else {
+                // Прокручиваем вверх - показываем контейнер
+                logoutContainer.style.transform = 'translateY(0)';
+            }
+
+            if (scrollTop === 0) {
+                // Если прокрутка в самом верху, оставляем контейнер видимым
+                logoutContainer.style.transform = 'translateY(0)';
+            }
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Для мобильных устройств или прокрутки вверх
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <title>QR Code</title>
+    <style>
+        body {
+            background-color: #1C1C24;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .qr-container {
+            background-color: #2C2C34;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+        }
+        .qr-container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .qr-container img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        .qr-container .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+    
+        /* Стиль для кнопок */
+        .qr-container .button-container a,
+        .qr-container .button-container button {
+            background-color: #fd6f17;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 80%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    
+        .qr-container .button-container a:hover,
+        .qr-container .button-container button:hover {
+            background-color: #ff873c;
+            transform: scale(1.02);
+        }
+    
+        /* Стиль для кнопки Go to main */
+        .qr-container .go-main-button {
+            background-color: #4A90E2;
+        }
+    
+        .qr-container .go-main-button:hover {
+            background-color: #5AA0F2;
+        }
+    
+        /* Новий стиль для сірої кнопки */
+        .qr-container .gray-button {
+            background-color: #4A4A4A !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 5px !important;
+            padding: 10px 53px !important;
+            font-size: 16px !important;
+            cursor: pointer !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            margin-bottom: 10px !important;
+            text-align: center !important;
+            transition: background-color 0.3s ease, transform 0.3s ease !important;
+        }
+        
+        .qr-container .gray-button:hover {
+            background-color: #6A6A6A !important;
+            transform: scale(1.02) !important;
+        }
+    
+       /* Додано для стилізації кнопки Log Out та імені користувача */
+ .logout-container {
+        position: absolute;
+        top: 5px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logout-container span {
+        font-size: 16px;
+        color: #FFFFFF;
+    }
+
+    .logout-container a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #4A4A4A;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+    }
+
+    .logout-container a:hover {
+        background-color: #6A6A6A;
+    }
+    </style>
+    
+</head>
+<body>
+<div class="logout-container">
+    <span>{{ username }}</span> <!-- Відображення імені користувача -->
+    <a href="{{ url_for('logout') }}">Log Out</a>
+</div>
+
+<div class="qr-container">
+    <h1>QR-code to this VCF:</h1>
+    <img src="{{ url_for('static', filename='output/' + qr_img_filename) }}" alt="QR Code">
+    <div class="button-container">
+        <a href="{{ url_for('static', filename='output/' + qr_img_filename) }}" class="download-button" download="QR_Code.png">Download QR Code</a>
+        <a href="{{ url_for('cancel') }}" class="go-main-button">Go to main</a>
+    <form action="{{ url_for('dyn_show_page') }}" method="get">
+        <input type="hidden" name="vcfid" value="{{ qr_img_filename.replace('.png', '') }}">
+        <button type="submit" class="gray-button">Show contact page</button>
+    </form>        
+    </div>
+</div>
+</body>
+</html>
